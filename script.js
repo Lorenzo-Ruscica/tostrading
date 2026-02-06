@@ -214,47 +214,93 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // ============================================================
-    // 4. FORM CONTATTI & DISCLAIMER
-    // ============================================================
-    const contactForm = document.getElementById('contact-form');
-    const modalDisclaimer = document.getElementById('modal-disclaimer');
-    const btnConfirmSubmit = document.getElementById('btn-confirm-submit');
-    const btnCloseDisclaimer = document.querySelector('.close-disclaimer');
+// ============================================================
+// 4. FORM CONTATTI, DISCLAIMER & BOX VERDE (AJAX)
+// ============================================================
+const contactForm = document.getElementById('contact-form');
+const modalDisclaimer = document.getElementById('modal-disclaimer');
+const btnConfirmSubmit = document.getElementById('btn-confirm-submit');
+const btnCloseDisclaimer = document.querySelector('.close-disclaimer');
+const successBox = document.getElementById('inline-success');
 
-    // A. Quando l'utente clicca "Invia" -> Blocca e mostra Disclaimer
-    if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault(); // Blocca invio
-            if (modalDisclaimer) {
-                modalDisclaimer.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            }
-        });
-    }
-
-    // B. Quando clicca "Sono d'accordo" -> Invia davvero
-    if (btnConfirmSubmit) {
-        btnConfirmSubmit.addEventListener('click', function() {
-            contactForm.submit();
-        });
-    }
-
-    // C. Chiusura Disclaimer
-    if (modalDisclaimer) {
-        if (btnCloseDisclaimer) {
-            btnCloseDisclaimer.addEventListener('click', () => {
-                modalDisclaimer.classList.remove('active');
-                document.body.style.overflow = 'auto';
-            });
+// A. Quando l'utente clicca "Invia" nel form -> Apri Disclaimer
+if (contactForm) {
+    contactForm.addEventListener('submit', function(e) {
+        e.preventDefault(); // Blocca tutto per ora
+        if (modalDisclaimer) {
+            modalDisclaimer.classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
-        window.addEventListener('click', (e) => {
-            if (e.target == modalDisclaimer) {
+    });
+}
+
+// B. Quando l'utente clicca "Sono d'accordo" nel Disclaimer
+if (btnConfirmSubmit) {
+    btnConfirmSubmit.addEventListener('click', function() {
+        
+        // 1. Cambia il testo del pulsante per far capire che sta lavorando
+        const originalText = btnConfirmSubmit.innerHTML;
+        btnConfirmSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Invio in corso...';
+        
+        // 2. Prepara i dati
+        const formData = new FormData(contactForm);
+
+        // 3. Invia a Formspree in BACKGROUND (senza ricaricare la pagina)
+        fetch(contactForm.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'application/json'
+            }
+        }).then(response => {
+            if (response.ok) {
+                // --- SUCCESSO! ---
+                
+                // 1. Chiudi il Disclaimer
                 modalDisclaimer.classList.remove('active');
                 document.body.style.overflow = 'auto';
+
+                // 2. Nascondi il Form
+                contactForm.style.display = 'none';
+                // Nascondi anche titolo e testo sopra il form (opzionale, per pulizia)
+                const formHeading = document.querySelector('.form-heading');
+                if(formHeading) formHeading.style.display = 'none';
+
+                // 3. MOSTRA IL BOX VERDE
+                if (successBox) {
+                    successBox.style.display = 'block';
+                    // Scrolla leggermente verso il messaggio per essere sicuri che lo veda
+                    successBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                
+            } else {
+                // Errore generico Formspree
+                alert("C'è stato un problema nell'invio. Riprova o scrivimi su Telegram.");
+                btnConfirmSubmit.innerHTML = originalText;
             }
+        }).catch(error => {
+            // Errore di rete
+            alert("Errore di connessione. Controlla la tua rete.");
+            btnConfirmSubmit.innerHTML = originalText;
+        });
+    });
+}
+
+// C. Gestione Chiusura Disclaimer (nessuna modifica qui)
+if (modalDisclaimer) {
+    if (btnCloseDisclaimer) {
+        btnCloseDisclaimer.addEventListener('click', () => {
+            modalDisclaimer.classList.remove('active');
+            document.body.style.overflow = 'auto';
         });
     }
+    window.addEventListener('click', (e) => {
+        if (e.target == modalDisclaimer) {
+            modalDisclaimer.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    });
+}
 
 
     // ============================================================
