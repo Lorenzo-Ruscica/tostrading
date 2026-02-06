@@ -214,19 +214,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-// ============================================================
-// 4. FORM CONTATTI, DISCLAIMER & BOX VERDE (AJAX)
-// ============================================================
+/* ============================================================
+   4. GESTIONE INVIO SILENZIOSO (AJAX) + DISCLAIMER
+   ============================================================ */
 const contactForm = document.getElementById('contact-form');
 const modalDisclaimer = document.getElementById('modal-disclaimer');
 const btnConfirmSubmit = document.getElementById('btn-confirm-submit');
 const btnCloseDisclaimer = document.querySelector('.close-disclaimer');
 const successBox = document.getElementById('inline-success');
 
-// A. Quando l'utente clicca "Invia" nel form -> Apri Disclaimer
+// A. Quando clicchi "Invia" nel form -> FERMI TUTTO e apri il Disclaimer
 if (contactForm) {
     contactForm.addEventListener('submit', function(e) {
-        e.preventDefault(); // Blocca tutto per ora
+        e.preventDefault(); // BLOCCA il ricaricamento della pagina!
+        
         if (modalDisclaimer) {
             modalDisclaimer.classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -234,66 +235,77 @@ if (contactForm) {
     });
 }
 
-// B. Quando l'utente clicca "Sono d'accordo" nel Disclaimer
+// B. Quando clicchi "Sono d'accordo" nel Disclaimer -> INVII I DATI
 if (btnConfirmSubmit) {
     btnConfirmSubmit.addEventListener('click', function() {
         
-        // 1. Cambia il testo del pulsante per far capire che sta lavorando
-        const originalText = btnConfirmSubmit.innerHTML;
-        btnConfirmSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Invio in corso...';
-        
-        // 2. Prepara i dati
+        // 1. Feedback visivo sul pulsante (così l'utente sa che sta lavorando)
+        const originalBtnText = btnConfirmSubmit.innerHTML;
+        btnConfirmSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Attendere...';
+        btnConfirmSubmit.style.pointerEvents = 'none'; // Evita doppi click
+
+        // 2. Raccogli i dati del form
         const formData = new FormData(contactForm);
 
-        // 3. Invia a Formspree in BACKGROUND (senza ricaricare la pagina)
+        // 3. INVIA A FORMSPREE "DI NASCOSTO" (Fetch API)
         fetch(contactForm.action, {
             method: 'POST',
             body: formData,
             headers: {
                 'Accept': 'application/json'
             }
-        }).then(response => {
+        })
+        .then(response => {
             if (response.ok) {
                 // --- SUCCESSO! ---
                 
-                // 1. Chiudi il Disclaimer
-                modalDisclaimer.classList.remove('active');
+                // Chiudi il Disclaimer
+                if (modalDisclaimer) modalDisclaimer.classList.remove('active');
                 document.body.style.overflow = 'auto';
 
-                // 2. Nascondi il Form
+                // Nascondi il Form originale
                 contactForm.style.display = 'none';
-                // Nascondi anche titolo e testo sopra il form (opzionale, per pulizia)
-                const formHeading = document.querySelector('.form-heading');
-                if(formHeading) formHeading.style.display = 'none';
+                
+                // Nascondi eventuale titolo sopra il form (opzionale)
+                const heading = document.querySelector('.form-heading');
+                if(heading) heading.style.display = 'none';
 
-                // 3. MOSTRA IL BOX VERDE
+                // MOSTRA IL BOX VERDE
                 if (successBox) {
                     successBox.style.display = 'block';
-                    // Scrolla leggermente verso il messaggio per essere sicuri che lo veda
                     successBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
-                
+
             } else {
-                // Errore generico Formspree
-                alert("C'è stato un problema nell'invio. Riprova o scrivimi su Telegram.");
-                btnConfirmSubmit.innerHTML = originalText;
+                // Errore generico
+                alert("Si è verificato un errore nell'invio. Riprova più tardi.");
+                resetButton(btnConfirmSubmit, originalBtnText);
             }
-        }).catch(error => {
-            // Errore di rete
-            alert("Errore di connessione. Controlla la tua rete.");
-            btnConfirmSubmit.innerHTML = originalText;
+        })
+        .catch(error => {
+            // Errore di connessione
+            alert("Errore di connessione. Controlla internet e riprova.");
+            resetButton(btnConfirmSubmit, originalBtnText);
         });
     });
 }
 
-// C. Gestione Chiusura Disclaimer (nessuna modifica qui)
+// Funzione per ripristinare il bottone in caso di errore
+function resetButton(btn, originalText) {
+    btn.innerHTML = originalText;
+    btn.style.pointerEvents = 'auto';
+}
+
+// C. Gestione Chiusura Disclaimer (X o Click fuori)
 if (modalDisclaimer) {
+    // Chiudi con la X
     if (btnCloseDisclaimer) {
         btnCloseDisclaimer.addEventListener('click', () => {
             modalDisclaimer.classList.remove('active');
             document.body.style.overflow = 'auto';
         });
     }
+    // Chiudi cliccando fuori
     window.addEventListener('click', (e) => {
         if (e.target == modalDisclaimer) {
             modalDisclaimer.classList.remove('active');
@@ -301,6 +313,7 @@ if (modalDisclaimer) {
         }
     });
 }
+
 
 
     // ============================================================
