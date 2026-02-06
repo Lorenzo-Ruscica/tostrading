@@ -172,7 +172,7 @@
         Ho ricevuto i tuoi dati. Clicca qui sotto per prenotare subito il tuo slot.
     </p>
 
-    <a href="INSERISCI_QUI_IL_LINK_CALENDLY" target="_blank" class="btn-neon-hero w-100" style="background: #00f260; color: #000; font-weight: 800;">
+    <a href="https://app.simplymeet.me/tostrading/intro15" target="_blank" class="btn-neon-hero w-100" style="background: #00f260; color: #000; font-weight: 800;">
         Prenota Consulenza 15' <i class="fas fa-calendar-check ml-2"></i>
     </a>
 
@@ -278,71 +278,120 @@
         </a>
     </div>
 </div>
-    <script>
-        // 1. MENU NAVBAR E SCROLL
-        window.addEventListener('scroll', function() {
-            const nav = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                nav.classList.add('scrolled');
-            } else {
-                nav.classList.remove('scrolled');
-            }
+<script>
+    // 1. MENU NAVBAR E SCROLL
+    window.addEventListener('scroll', function() {
+        const nav = document.getElementById('navbar');
+        if (window.scrollY > 50) {
+            nav.classList.add('scrolled');
+        } else {
+            nav.classList.remove('scrolled');
+        }
+    });
+    const hamburger = document.querySelector('.hamburger-menu');
+    const navMenu = document.querySelector('.nav-menu');
+    if(hamburger) {
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
         });
-        const hamburger = document.querySelector('.hamburger-menu');
-        const navMenu = document.querySelector('.nav-menu');
-        if(hamburger) {
-            hamburger.addEventListener('click', () => {
-                navMenu.classList.toggle('active');
+    }
+
+    // 2. GESTIONE INVIO "SILENZIOSO" CON DISCLAIMER E BOX VERDE
+    document.addEventListener('DOMContentLoaded', function() {
+        const contactForm = document.getElementById('contact-form');
+        const modalDisclaimer = document.getElementById('modal-disclaimer');
+        const btnConfirmSubmit = document.getElementById('btn-confirm-submit');
+        const btnCloseDisclaimer = document.querySelector('.close-disclaimer');
+        const successBox = document.getElementById('inline-success');
+
+        // A. Quando clicchi "Prenota" nel form -> FERMI TUTTO e apri il Disclaimer
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault(); // BLOCCA il ricaricamento della pagina!
+                
+                if (modalDisclaimer) {
+                    modalDisclaimer.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
             });
         }
 
-        // 2. GESTIONE INVIO FORM CON DISCLAIMER
-        document.addEventListener('DOMContentLoaded', function() {
-            const contactForm = document.getElementById('contact-form');
-            const modalDisclaimer = document.getElementById('modal-disclaimer');
-            const btnConfirmSubmit = document.getElementById('btn-confirm-submit');
-            const btnCloseDisclaimer = document.querySelector('.close-disclaimer');
+        // B. Quando clicchi "Sono d'accordo" nel Disclaimer -> INVII I DATI DI NASCOSTO
+        if (btnConfirmSubmit) {
+            btnConfirmSubmit.addEventListener('click', function() {
+                
+                // 1. Feedback visivo (così l'utente sa che sta caricando)
+                const originalBtnText = btnConfirmSubmit.innerHTML;
+                btnConfirmSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Invio in corso...';
+                btnConfirmSubmit.style.pointerEvents = 'none';
 
-            // Quando l'utente clicca "Invia" nel form
-            if (contactForm) {
-                contactForm.addEventListener('submit', function(e) {
-                    e.preventDefault(); // Blocca l'invio immediato
-                    
-                    // Apri il Disclaimer
-                    if (modalDisclaimer) {
-                        modalDisclaimer.classList.add('active');
-                        document.body.style.overflow = 'hidden';
+                // 2. Prepara i dati
+                const formData = new FormData(contactForm);
+
+                // 3. INVIA A FORMSPREE SENZA USCIRE DALLA PAGINA (AJAX)
+                fetch(contactForm.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
                     }
-                });
-            }
-
-            // Quando l'utente clicca "Sono d'accordo" nel Disclaimer
-            if (btnConfirmSubmit) {
-                btnConfirmSubmit.addEventListener('click', function() {
-                    // Invia veramente il form ora
-                    contactForm.submit(); 
-                });
-            }
-
-            // Chiudi disclaimer con la X
-            if (btnCloseDisclaimer) {
-                btnCloseDisclaimer.addEventListener('click', () => {
-                    if (modalDisclaimer) {
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // --- SUCCESSO! ---
+                        
+                        // Chiudi il Disclaimer
                         modalDisclaimer.classList.remove('active');
                         document.body.style.overflow = 'auto';
+
+                        // Nascondi il Form originale
+                        contactForm.style.display = 'none';
+                        
+                        // Nascondi eventuale titolo sopra (facoltativo)
+                        const heading = document.querySelector('.form-heading');
+                        if(heading) heading.style.display = 'none';
+
+                        // MOSTRA IL BOX VERDE
+                        if (successBox) {
+                            successBox.style.display = 'block';
+                            successBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+
+                    } else {
+                        // Errore generico
+                        alert("Errore nell'invio. Riprova.");
+                        btnConfirmSubmit.innerHTML = originalBtnText;
+                        btnConfirmSubmit.style.pointerEvents = 'auto';
                     }
+                })
+                .catch(error => {
+                    // Errore di connessione
+                    alert("Errore di connessione. Controlla internet.");
+                    btnConfirmSubmit.innerHTML = originalBtnText;
+                    btnConfirmSubmit.style.pointerEvents = 'auto';
+                });
+            });
+        }
+
+        // C. Gestione Chiusura Disclaimer (X o Click fuori)
+        if (modalDisclaimer) {
+            // Chiudi con la X
+            if (btnCloseDisclaimer) {
+                btnCloseDisclaimer.addEventListener('click', () => {
+                    modalDisclaimer.classList.remove('active');
+                    document.body.style.overflow = 'auto';
                 });
             }
-
-            // Chiudi disclaimer cliccando fuori
+            // Chiudi cliccando fuori
             window.addEventListener('click', (e) => {
-                if (modalDisclaimer && e.target == modalDisclaimer) {
+                if (e.target == modalDisclaimer) {
                     modalDisclaimer.classList.remove('active');
                     document.body.style.overflow = 'auto';
                 }
             });
-        });
-    </script>
+        }
+    });
+</script>
 
 </body>
 </html>
