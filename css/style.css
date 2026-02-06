@@ -2006,3 +2006,22 @@ nav.scrolled {
     box-shadow: 0 0 20px rgba(0, 242, 96, 0.4);
     transform: translateY(-2px); /* Si alza leggermente */
 }
+/* --- RIMUOVI SOTTOLINEATURE DAI PULSANTI --- */
+
+/* 1. Pulsanti principali e Navbar */
+a, 
+.btn-neon-hero, 
+.btn-neon-outline-large, 
+.btn-card-action,
+.nav-link {
+    text-decoration: none !important; /* Forza la rimozione */
+}
+
+/* 2. Anche quando passi sopra con il mouse (Hover) */
+a:hover, 
+.btn-neon-hero:hover, 
+.btn-neon-outline-large:hover,
+.btn-card-action:hover,
+.nav-link:hover {
+    text-decoration: none !important;
+}
