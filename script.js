@@ -1,47 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    // --- 1. GESTIONE NAVBAR (Effetto Vetro allo scroll) ---
+    // ============================================================
+    // 1. NAVIGAZIONE & MENU
+    // ============================================================
+    
+    // --- Effetto Vetro Navbar allo scroll ---
     const navbar = document.getElementById('navbar');
-    
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 30) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
-    });
-
-    // --- 2. ANIMAZIONE INGRESSO HERO SECTION ---
-    const heroSection = document.querySelector('.hero-section');
-    
-    setTimeout(() => {
-        if (heroSection) {
-            heroSection.classList.add('hero-visible');
-        }
-    }, 300); 
-
-    // --- 3. SMOOTH SCROLL (Per i link interni) ---
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
-            
-            const targetElement = document.querySelector(targetId);
-            if(targetElement){
-                targetElement.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
-    });
-});
-document.addEventListener('DOMContentLoaded', () => {
-    
-    // --- 1. NAVBAR SCROLL EFFECT ---
-    const navbar = document.getElementById('navbar');
-    
     window.addEventListener('scroll', () => {
         if (window.scrollY > 20) {
             navbar.classList.add('scrolled');
@@ -50,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- 2. MOBILE MENU TOGGLE ---
+    // --- Menu Mobile (Hamburger) ---
     const hamburger = document.getElementById('hamburger');
     const navMenu = document.querySelector('.nav-menu');
 
@@ -58,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         hamburger.addEventListener('click', () => {
             navMenu.classList.toggle('active');
             
+            // Cambio icona (da righe a X)
             const icon = hamburger.querySelector('i');
             if (navMenu.classList.contains('active')) {
                 icon.classList.remove('fa-bars');
@@ -69,20 +34,49 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Chiudi menu quando clicchi un link
     document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', () => {
             navMenu.classList.remove('active');
-            hamburger.querySelector('i').classList.remove('fa-times');
-            hamburger.querySelector('i').classList.add('fa-bars');
+            if(hamburger) {
+                hamburger.querySelector('i').classList.remove('fa-times');
+                hamburger.querySelector('i').classList.add('fa-bars');
+            }
         });
     });
 
-    // --- 3. ANIMAZIONI HERO ---
+    // --- Smooth Scroll (Link interni #) ---
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const targetId = this.getAttribute('href');
+            if (targetId === '#' || targetId === '') return;
+            
+            // Se il link ha la classe 'js-close-link', non fare lo scroll qui (lo gestisce la logica modale)
+            if (this.classList.contains('js-close-link')) return;
+
+            const targetElement = document.querySelector(targetId);
+            if(targetElement){
+                e.preventDefault();
+                targetElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+
+    // ============================================================
+    // 2. ANIMAZIONI & INTERFACCIA
+    // ============================================================
+
+    // --- Animazione Ingresso Hero ---
     const heroSection = document.querySelector('.hero-section');
     setTimeout(() => {
         if(heroSection) heroSection.classList.add('hero-visible');
     }, 200);
 
+    // --- Reveal allo Scroll (Intersection Observer) ---
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -90,23 +84,22 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
-
     document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
-    // --- 4. GESTIONE ACCORDION (Support Section) ---
-    const accordions = document.querySelectorAll('.accordion-item');
 
+    // --- Accordion (Sezione Supporto) ---
+    const accordions = document.querySelectorAll('.accordion-item');
     accordions.forEach(item => {
         const header = item.querySelector('.accordion-header');
-        
         header.addEventListener('click', () => {
+            // Chiudi gli altri
             accordions.forEach(otherItem => {
                 if (otherItem !== item && otherItem.classList.contains('active')) {
                     otherItem.classList.remove('active');
                     otherItem.querySelector('.accordion-body').style.maxHeight = null;
                 }
             });
+            // Apri/Chiudi corrente
             item.classList.toggle('active');
-            
             const body = item.querySelector('.accordion-body');
             if (item.classList.contains('active')) {
                 body.style.maxHeight = body.scrollHeight + "px";
@@ -115,25 +108,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
-    // --- 5. SIDE NAVIGATION SCROLL SPY ---
-    // Seleziona tutti i link del menu laterale
+
+    // --- Side Navigation Scroll Spy ---
     const sideLinks = document.querySelectorAll('.side-link');
     const sections = document.querySelectorAll('section');
 
     function changeLinkState() {
+        if(sections.length === 0) return;
+        
         let index = sections.length;
-
-        // Cerca quale sezione è visibile
         while(--index && window.scrollY + 300 < sections[index].offsetTop) {}
         
-        // Rimuovi 'active' da tutti
         sideLinks.forEach((link) => link.classList.remove('active'));
         
-        // Aggiungi 'active' a quello corrente (se esiste corrispondenza)
-        // L'indice 0 potrebbe essere problematico se l'header non è una section, 
-        // ma nel nostro caso la hero è la prima section.
         if(index >= 0) {
-            // Verifica che l'id della sezione corrisponda all'href del link
             const currentId = sections[index].id;
             const activeLink = document.querySelector(`.side-link[href="#${currentId}"]`);
             if (activeLink) {
@@ -141,135 +129,179 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
+    if(sideLinks.length > 0) {
+        window.addEventListener('scroll', changeLinkState);
+        changeLinkState();
+    }
 
-    // Attiva la funzione allo scroll
-    window.addEventListener('scroll', changeLinkState);
-    // Attiva anche al caricamento
-    changeLinkState();
-   // GESTIONE MODAL POPUP (Multi-Button Support)
-function setupModalGroup(btnClass, modalId, specificCloseClass) {
-    const modal = document.getElementById(modalId);
-    const buttons = document.querySelectorAll('.' + btnClass);
 
-    if (modal && buttons.length > 0) {
-        
-        // --- 1. CERCA IL TASTO CHIUDI (Logica Intelligente) ---
-        let btnClose = null;
+    // ============================================================
+    // 3. GESTIONE MODAL POPUP (Funzione Universale)
+    // ============================================================
+    function setupModalGroup(btnClass, modalId, specificCloseClass) {
+        const modal = document.getElementById(modalId);
+        const buttons = document.querySelectorAll('.' + btnClass);
 
-        // Se hai passato una classe specifica (vecchio metodo), proviamo a usarla
-        if (specificCloseClass) {
-            // Aggiungi il punto se manca (es. "close-gold-a" diventa ".close-gold-a")
-            let selector = specificCloseClass.startsWith('.') ? specificCloseClass : '.' + specificCloseClass;
-            btnClose = modal.querySelector(selector);
+        if (modal && buttons.length > 0) {
+            
+            // Cerca il tasto chiudi
+            let btnClose = null;
+            if (specificCloseClass) {
+                let selector = specificCloseClass.startsWith('.') ? specificCloseClass : '.' + specificCloseClass;
+                btnClose = modal.querySelector(selector);
+            }
+            if (!btnClose) {
+                btnClose = modal.querySelector('.close-modal');
+            }
+
+            // APERTURA
+            buttons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    modal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+
+            // CHIUSURA (Tasto X)
+            if (btnClose) {
+                btnClose.addEventListener('click', () => {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                });
+            }
+
+            // CHIUSURA (Click Sfondo)
+            window.addEventListener('click', (e) => {
+                if (e.target == modal) {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
         }
+    }
 
-        // Se non l'abbiamo trovato (o non hai passato nulla), cerchiamo la classe standard ".close-modal"
-        if (!btnClose) {
-            btnClose = modal.querySelector('.close-modal');
-        }
+    // --- Inizializzazione Pop-up ---
+    setupModalGroup('js-open-gold', 'modal-gold', '.close-modal'); 
+    setupModalGroup('js-open-platinum', 'modal-platinum', '.close-platinum'); 
+    setupModalGroup('js-open-gold-annual', 'modal-gold-annual');
+    setupModalGroup('js-open-platinum-annual', 'modal-platinum-annual'); 
+    setupModalGroup('js-open-tos-more', 'modal-tos-more');
 
-        // --- 2. GESTIONE EVENTI ---
-        
-        // Apertura
-        buttons.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                modal.classList.add('active');
-                document.body.style.overflow = 'hidden';
+    // --- Auto-Chiusura Modal al click su link interni ---
+    const autoCloseLinks = document.querySelectorAll('.js-close-link');
+    if (autoCloseLinks.length > 0) {
+        autoCloseLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                const parentModal = this.closest('.modal-overlay');
+                if (parentModal) {
+                    parentModal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                    
+                    // Gestione scroll manuale verso l'ancora
+                    const targetId = this.getAttribute('href');
+                    if(targetId && targetId.startsWith('#')) {
+                        const targetEl = document.querySelector(targetId);
+                        if(targetEl) {
+                            setTimeout(() => {
+                                targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }, 300); // Piccolo ritardo per permettere la chiusura del modal
+                        }
+                    }
+                }
             });
         });
+    }
 
-        // Chiusura (Click sulla X)
-        if (btnClose) {
-            btnClose.addEventListener('click', () => {
-                modal.classList.remove('active');
+
+    // ============================================================
+    // 4. FORM CONTATTI & DISCLAIMER
+    // ============================================================
+    const contactForm = document.getElementById('contact-form');
+    const modalDisclaimer = document.getElementById('modal-disclaimer');
+    const btnConfirmSubmit = document.getElementById('btn-confirm-submit');
+    const btnCloseDisclaimer = document.querySelector('.close-disclaimer');
+
+    // A. Quando l'utente clicca "Invia" -> Blocca e mostra Disclaimer
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault(); // Blocca invio
+            if (modalDisclaimer) {
+                modalDisclaimer.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        });
+    }
+
+    // B. Quando clicca "Sono d'accordo" -> Invia davvero
+    if (btnConfirmSubmit) {
+        btnConfirmSubmit.addEventListener('click', function() {
+            contactForm.submit();
+        });
+    }
+
+    // C. Chiusura Disclaimer
+    if (modalDisclaimer) {
+        if (btnCloseDisclaimer) {
+            btnCloseDisclaimer.addEventListener('click', () => {
+                modalDisclaimer.classList.remove('active');
                 document.body.style.overflow = 'auto';
             });
         }
-
-        // Chiusura (Click sullo sfondo)
         window.addEventListener('click', (e) => {
-            if (e.target == modal) {
-                modal.classList.remove('active');
+            if (e.target == modalDisclaimer) {
+                modalDisclaimer.classList.remove('active');
                 document.body.style.overflow = 'auto';
             }
         });
     }
-}
 
-// Inizializza i gruppi (Nota: non usiamo # per l'ID del bottone, ma il nome della classe)
-// 1. Tutti i pulsanti con classe 'js-open-gold' aprono 'modal-gold'
-setupModalGroup('js-open-gold', 'modal-gold', '.close-modal'); 
 
-// 2. Tutti i pulsanti con classe 'js-open-platinum' aprono 'modal-platinum'
-setupModalGroup('js-open-platinum', 'modal-platinum', '.close-platinum'); 
-setupModalGroup('js-open-gold-annual', 'modal-gold-annual', 'close-gold-a');
-setupModalGroup('js-open-platinum-annual', 'modal-platinum-annual', 'close-platinum-a');    
-// AGGIUNGI QUESTA RIGA:
-setupModalGroup('js-open-tos-more', 'modal-tos-more');
-
-/* --- AUTO-CHIUSURA MODAL AL CLICK SUI LINK INTERNI --- */
-const autoCloseLinks = document.querySelectorAll('.js-close-link');
-
-if (autoCloseLinks.length > 0) {
-    autoCloseLinks.forEach(link => {
-        link.addEventListener('click', function() {
-            // Trova il pop-up genitore di questo link
-            const parentModal = this.closest('.modal-overlay');
+    // ============================================================
+    // 5. GESTIONE SUCCESSO (Ritorno da Formspree)
+    // ============================================================
+    
+    // Controlla se l'URL contiene "?sent=true"
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    if (urlParams.has('sent')) {
+        const successModal = document.getElementById('modal-success');
+        
+        if (successModal) {
+            // Apri il pop-up successo
+            successModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
             
-            if (parentModal) {
-                // Chiudi il modal
-                parentModal.classList.remove('active');
-                // Riabilita lo scroll della pagina principale
+            // Pulisci l'URL
+            const newUrl = window.location.pathname;
+            window.history.replaceState({}, document.title, newUrl);
+        }
+    }
+
+    // Gestione chiusura Modal Successo
+    const btnCloseSuccess = document.querySelector('.close-success');
+    const successModal = document.getElementById('modal-success');
+
+    if (successModal) {
+        if (btnCloseSuccess) {
+            btnCloseSuccess.addEventListener('click', () => {
+                successModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
+        }
+        window.addEventListener('click', (e) => {
+            if (e.target == successModal) {
+                successModal.classList.remove('active');
                 document.body.style.overflow = 'auto';
             }
         });
-    });
-}       
-/* --- GESTIONE INVIO FORM CON DISCLAIMER --- */
-const contactForm = document.getElementById('contact-form');
-const modalDisclaimer = document.getElementById('modal-disclaimer');
-const btnConfirmSubmit = document.getElementById('btn-confirm-submit');
-const btnCloseDisclaimer = document.querySelector('.close-disclaimer');
+    }
+/* --- AUTO-CONFIGURAZIONE LINK RITORNO FORMSPREE --- */
+// Questo codice riempie il campo _next con l'indirizzo esatto in cui ti trovi ora
+const redirectInput = document.getElementById('redirect-link');
 
-// 1. Quando l'utente clicca "Invia Richiesta" nel form
-if (contactForm) {
-contactForm.addEventListener('submit', function(e) {
-e.preventDefault(); // FERMA l'invio immediato a Formspree
-
-// Apri il Disclaimer
-if (modalDisclaimer) {
-modalDisclaimer.classList.add('active');
-document.body.style.overflow = 'hidden';
+if (redirectInput) {
+    // Prende l'indirizzo attuale (es. www.tuosito.it/contatti.html) e aggiunge ?sent=true
+    redirectInput.value = window.location.origin + window.location.pathname + '?sent=true';
 }
-});
-}
-
-// 2. Quando l'utente clicca "Sono d'accordo" nel Disclaimer
-if (btnConfirmSubmit) {
-btnConfirmSubmit.addEventListener('click', function() {
-// Invia veramente il form ora
-contactForm.submit();
-});
-}
-
-// 3. Gestione chiusura Disclaimer (X o click fuori)
-if (modalDisclaimer) {
-// Chiudi con la X
-if (btnCloseDisclaimer) {
-btnCloseDisclaimer.addEventListener('click', () => {
-modalDisclaimer.classList.remove('active');
-document.body.style.overflow = 'auto';
-});
-}
-// Chiudi cliccando fuori (annulla l'invio)
-window.addEventListener('click', (e) => {
-if (e.target == modalDisclaimer) {
-modalDisclaimer.classList.remove('active');
-document.body.style.overflow = 'auto';
-}
-});
-}
-
-
 });

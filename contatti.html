@@ -71,11 +71,13 @@
                 
                 <form action="https://formspree.io/f/mwvnejwj" method="POST" class="tech-form" id="contact-form">
                     
+                    <input type="hidden" name="_next" id="redirect-link" value="">
+                    
                     <input type="hidden" name="_subject" value="Nuova richiesta consulenza dal Sito">
     
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="nome">Nome e Cognome</label>
+                            <label for="nome">Nome e Cognome *</label>
                             <input type="text" id="nome" name="nome" placeholder="Il tuo nome completo" required>
                         </div>
                         <div class="form-group">
@@ -155,7 +157,7 @@
 
                     <div class="form-group full-width">
                         <label for="messaggio">Messaggio</label>
-                        <textarea id="messaggio" name="messaggio" rows="5" placeholder="Scrivi qui le tue domande o necessità..." required></textarea>
+                        <textarea id="messaggio" name="messaggio" rows="5" placeholder="Scrivi qui le tue domande o necessità..."></textarea>
                     </div>
 
                     <div class="form-submit">
@@ -175,9 +177,6 @@
             <div class="footer-grid">
                 
                 <div class="footer-col reveal">
-                    <a href="contatti.html" class="btn-neon-outline-large">
-                        Prenota Consulenza Gratuita di 15 minuti <i class="fas fa-calendar-alt ml-2"></i>
-                    </a>
                     
                     <div class="footer-social-block">
                         <span class="social-label">Social Network <i class="fas fa-arrow-right ml-2 text-neon"></i></span>
@@ -249,7 +248,25 @@
             </div>
         </div>
     </div>
+<div id="modal-success" class="modal-overlay">
+    <div class="modal-content glass-box" style="text-align: center; max-width: 500px;">
+        <span class="close-modal close-success">&times;</span>
+        
+        <div style="margin-bottom: 20px;">
+            <i class="fas fa-check-circle text-neon" style="font-size: 3rem;"></i>
+        </div>
 
+        <h2 class="modal-title">Messaggio Inviato!</h2>
+        <p style="margin-bottom: 25px; color: #ccc;">
+            Grazie per avermi contattato. Ho ricevuto la tua richiesta.<br>
+            Come promesso, puoi ora prenotare la tua sessione gratuita.
+        </p>
+        
+        <a href="LINK_AL_TUO_CALENDLY_O_AGENDA" target="_blank" class="btn-neon-hero w-100">
+            Prenota ora i 15 min gratuiti <i class="fas fa-calendar-check ml-2"></i>
+        </a>
+    </div>
+</div>
     <script>
         // 1. MENU NAVBAR E SCROLL
         window.addEventListener('scroll', function() {
