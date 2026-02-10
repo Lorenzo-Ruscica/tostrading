@@ -2025,3 +2025,15 @@ a:hover,
 .nav-link:hover {
     text-decoration: none !important;
 }
+/* LINK PRIVACY NEL FOOTER */
+.privacy-link {
+    color: inherit; /* Prende lo stesso grigio del copyright */
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.privacy-link:hover {
+    color: #00f260; /* Diventa Verde Neon al passaggio */
+    text-decoration: underline;
+    text-shadow: 0 0 8px rgba(0, 242, 96, 0.4);
+}

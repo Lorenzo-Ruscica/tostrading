@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy & Cookie Policy | Gianmatteo Pichierri</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="loghi/logo.jpg">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- 1. VARIABILI & RESET (Dal tuo CSS) --- */
+        :root {
+            --neon-green: #00f260; 
+            --bg-dark: #080c14;          
+            --bg-glass: rgba(8, 12, 20, 0.8); 
+            --text-white: #ffffff;
+            --text-dim: #b3b9c5;          
+            --transition-smooth: all 0.4s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif; /* FONT CORRETTO */
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; transition: var(--transition-smooth); }
+        ul { list-style: none; }
+
+        /* --- 2. LAYOUT --- */
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
+        /* NAVBAR SEMPLIFICATA */
+        .simple-nav {
+            padding: 20px 0;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            margin-bottom: 60px;
+        }
+        .nav-logo img { height: 50px; border-radius: 50%; }
+        
+        /* --- 3. STILE PAGINA PRIVACY (Basato su .glass-box) --- */
+        .privacy-section {
+            padding-bottom: 80px;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            min-height: 100vh;
+        }
+
+        .glass-box-legal {
+            width: 100%;               
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 4rem 3rem; 
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            border-top: 3px solid var(--neon-green); 
+            text-align: left;
+        }
+
+        /* TIPOGRAFIA */
+        h1 {
+            font-size: 2.5rem; font-weight: 800; color: #fff;
+            margin-bottom: 10px; text-align: center;
+        }
+        
+        .last-update {
+            display: block; text-align: center; color: var(--text-dim);
+            font-size: 0.9rem; margin-bottom: 40px;
+        }
+
+        h2 {
+            color: var(--neon-green);
+            font-size: 1.5rem; font-weight: 700;
+            margin-top: 40px; margin-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 242, 96, 0.2);
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #fff; font-size: 1.2rem; font-weight: 600;
+            margin-top: 25px; margin-bottom: 10px;
+        }
+
+        p, li {
+            color: var(--text-dim); font-size: 1.05rem;
+            margin-bottom: 15px; text-align: justify;
+        }
+
+        strong { color: #fff; }
+
+        /* LISTE E LINK */
+        ul.legal-list { padding-left: 0; }
+        ul.legal-list li {
+            position: relative; padding-left: 25px;
+        }
+        ul.legal-list li::before {
+            content: "\f00c"; /* Check icon */
+            font-family: "Font Awesome 5 Free"; font-weight: 900;
+            color: var(--neon-green);
+            position: absolute; left: 0; top: 0;
+        }
+
+        a.legal-link {
+            color: var(--neon-green); text-decoration: underline;
+        }
+        a.legal-link:hover { color: #fff; }
+
+        /* BOTTONE INDIETRO (Stile .btn-neon-outline) */
+        .btn-back {
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 0.8rem 2rem; 
+            border: 2px solid var(--neon-green); color: var(--neon-green);
+            font-weight: 700; text-transform: uppercase; border-radius: 50px;
+            font-size: 0.9rem;
+        }
+        .btn-back:hover {
+            background: var(--neon-green); color: #000; 
+            box-shadow: 0 0 20px rgba(0, 242, 96, 0.4);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .glass-box-legal { padding: 2rem 1.5rem; }
+            h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="simple-nav">
+            <div class="nav-logo">
+                <a href="index.html">
+                    <img src="loghi/logo.jpg" alt="Gianmatteo Pichierri Logo">
+                </a>
+            </div>
+            <a href="index.html" class="btn-back">
+                <i class="fas fa-arrow-left"></i> Home
+            </a>
+        </div>
+    </div>
+
+    <section class="privacy-section">
+        <div class="container">
+            
+            <div class="glass-box-legal">
+                <h1>Informativa Privacy e Cookie</h1>
+                <span class="last-update">Ultimo aggiornamento: Febbraio 2026</span>
+
+                <p>
+                    Benvenuto su <strong>tostrading.it</strong>. La tua privacy è importante. In questa pagina ti spiego in modo trasparente e chiaro come gestisco i tuoi dati, nel pieno rispetto del Regolamento UE 2016/679 (GDPR).
+                </p>
+
+                <h2>1. Chi è il Titolare del Trattamento?</h2>
+                <p>Il titolare del trattamento dei dati raccolti tramite questo sito è:</p>
+                <p>
+                    <strong>Gianmatteo Pichierri</strong><br>
+                    Trader Sportivo e Formatore<br>
+                    Email per contatti privacy: <a href="mailto:gpichierri@gmail.com" class="legal-link" style="font-weight:bold;">gpichierri@gmail.com</a>
+                </p>
+
+                <h2>2. Quali dati raccolgo e perché?</h2>
+                <p>Il sito raccoglie solo i dati strettamente necessari per fornirti i servizi richiesti.</p>
+
+                <h3>A. Modulo di Contatto</h3>
+                <p>Quando compili il form nella pagina "Contatti", raccolgo:</p>
+                <ul class="legal-list">
+                    <li><strong>Nome e Cognome:</strong> Per sapere come chiamarti.</li>
+                    <li><strong>Email:</strong> Per poterti rispondere.</li>
+                    <li><strong>Info professionali (Esperienza, ecc.):</strong> Per capire meglio il tuo livello e offrirti una consulenza mirata.</li>
+                </ul>
+                <p><strong>Finalità:</strong> Questi dati servono <em>esclusivamente</em> per rispondere alla tua richiesta di informazioni o prenotazione consulenza. Non verranno mai ceduti a terzi per marketing.</p>
+
+                <h3>B. Cookie e Video YouTube</h3>
+                <p>
+                    Questo sito non utilizza cookie di profilazione proprietari. Tuttavia, per mostrarti i miei video, utilizzo il player integrato di <strong>YouTube</strong> (Google).
+                </p>
+                <p>
+                    Quando guardi un video sul sito, YouTube potrebbe installare dei cookie per raccogliere statistiche di visualizzazione. Per maggiori informazioni, ti invito a leggere la <a href="https://policies.google.com/privacy" target="_blank" class="legal-link">Privacy Policy di Google</a>.
+                </p>
+
+                <h2>3. Come proteggo i tuoi dati?</h2>
+                <p>
+                    I tuoi dati sono trattati con strumenti informatici adeguati a garantirne la sicurezza e la riservatezza. Il sito utilizza il protocollo <strong>HTTPS</strong> per criptare le comunicazioni.
+                    I dati inviati tramite il modulo di contatto vengono gestiti tramite il servizio sicuro <strong>Formspree</strong> e arrivano direttamente alla mia casella email protetta.
+                </p>
+
+                <h2>4. I tuoi Diritti (GDPR)</h2>
+                <p>In qualunque momento hai il diritto di:</p>
+                <ul class="legal-list">
+                    <li>Chiedermi se possiedo tuoi dati.</li>
+                    <li>Chiedere una copia dei tuoi dati.</li>
+                    <li>Chiedere di correggere o cancellare i tuoi dati.</li>
+                    <li>Revocare il consenso al trattamento.</li>
+                </ul>
+                <p>Per esercitare questi diritti, ti basta inviarmi una semplice email all'indirizzo indicato al punto 1.</p>
+
+                <h2>5. Luogo del trattamento</h2>
+                <p>
+                    I dati sono trattati presso la sede operativa del Titolare e in ogni altro luogo in cui le parti coinvolte nel trattamento siano localizzate (es. server di hosting sicuri situati in Europa o USA conformi al Data Privacy Framework).
+                </p>
+
+                <div style="margin-top: 50px; text-align: center;">
+                    <a href="index.html" class="btn-back">
+                        Ho capito, torna al sito
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <footer class="site-footer" style="padding: 20px; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); margin-top: auto;">
+        <p style="font-size: 0.8rem; text-align: center; margin: 0;">© 2026 Gianmatteo Pichierri - Tutti i diritti riservati.</p>
+    </footer>
+
+</body>
+</html>
