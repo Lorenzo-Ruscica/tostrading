@@ -187,6 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupModalGroup('js-open-gold-annual', 'modal-gold-annual');
     setupModalGroup('js-open-platinum-annual', 'modal-platinum-annual'); 
     setupModalGroup('js-open-tos-more', 'modal-tos-more');
+    setupModalGroup('js-open-xtrader', 'modal-xtrader', '.close-xtrader');
 
     // --- Auto-Chiusura Modal al click su link interni ---
     const autoCloseLinks = document.querySelectorAll('.js-close-link');
